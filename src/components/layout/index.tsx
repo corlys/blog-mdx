@@ -6,6 +6,7 @@ import Header from "./Header";
 
 type LayoutProps = {
   children: ReactNode;
+  // customMeta?: MetaProps;
 };
 
 const Layout = ({ children }: LayoutProps) => {

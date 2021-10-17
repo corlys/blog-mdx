@@ -1,10 +1,11 @@
 /* eslint-disable react/jsx-props-no-spreading */
-import { ChakraProvider } from "@chakra-ui/react";
+import { ChakraProvider, useColorMode } from "@chakra-ui/react";
 import { EmotionCache } from "@emotion/cache";
-import { CacheProvider } from "@emotion/react";
+import { CacheProvider, Global, css } from "@emotion/react";
 import { DefaultSeo } from "next-seo";
 import { AppProps } from "next/app";
 import Head from "next/head";
+import { ReactNode } from "react";
 import "@fontsource/lexend/latin.css";
 
 import defaultSEOConfig from "../../next-seo.config";
@@ -12,12 +13,27 @@ import Layout from "components/layout";
 import createEmotionCache from "styles/createEmotionCache";
 import customTheme from "styles/customTheme";
 import "styles/globals.css";
+import { prismDarkTheme, prismLightTheme } from "styles/prism";
 
 const clientSideEmotionCache = createEmotionCache();
 
 interface MyAppProps extends AppProps {
   emotionCache?: EmotionCache;
 }
+
+const GlobalStyle = ({ children }: { children: ReactNode }) => {
+  const { colorMode } = useColorMode();
+  return (
+    <>
+      <Global
+        styles={css`
+          ${colorMode === "light" ? prismLightTheme : prismDarkTheme}
+        `}
+      />
+      {children}
+    </>
+  );
+};
 
 const MyApp = ({
   Component,
@@ -34,9 +50,11 @@ const MyApp = ({
           />
         </Head>
         <DefaultSeo {...defaultSEOConfig} />
-        <Layout>
-          <Component {...pageProps} />
-        </Layout>
+        <GlobalStyle>
+          <Layout>
+            <Component {...pageProps} />
+          </Layout>
+        </GlobalStyle>
       </ChakraProvider>
     </CacheProvider>
   );

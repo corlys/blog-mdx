@@ -1,70 +1,52 @@
-import { Box, Text, VStack, Flex, useColorMode } from "@chakra-ui/react";
-import { format, parseISO } from "date-fns";
+import { Box, Text, Stack, Divider } from "@chakra-ui/react";
 import { GetStaticProps } from "next";
-import Link from "next/link";
 
+import BlogPost from "../components/BlogPost";
+import ProjectSection from "../components/ProjectSection";
 import { getAllPosts } from "../lib/api";
 import { PostType } from "../types/post";
+import { ProjectType } from "types/projects";
 
 type IndexProps = {
+  projects: ProjectType[];
   posts: PostType[];
 };
 
-const Home = ({ posts }: IndexProps): JSX.Element => {
-  const { colorMode } = useColorMode();
-
+const Home = ({ posts, projects }: IndexProps): JSX.Element => {
   return (
     <Box mb={8} w="full">
-      <Text fontSize="3xl" align="center">
-        I Welcome Thine Soul to my Blog
-      </Text>
-      <VStack mt="8" spacing="4" align="flex-start">
-        {posts.map((post) => (
-          <Box
-            key={post.slug}
-            borderRadius="md"
-            bg={colorMode === "light" ? "teal.200" : "teal.500"}
-            w="full"
-          >
-            <Flex direction="column" padding="4">
-              <Text fontSize="small">
-                {post.date ? format(parseISO(post.date), "MMMM dd, yyyy") : ""}
-              </Text>
-              <Text
-                fontSize="4xl"
-                _hover={{
-                  color: `${colorMode === "light" ? "teal.500" : "teal.200"}`,
-                }}
-              >
-                <Link as={`/posts/${post.slug}`} href="/posts/[slug]" passHref>
-                  <a>{post.title}</a>
-                </Link>
-              </Text>
-              <Text fontSize="medium" isTruncated>
-                {post.description}
-              </Text>
-              <Text
-                fontSize="medium"
-                _hover={{
-                  color: `${colorMode === "light" ? "teal.500" : "teal.200"}`,
-                }}
-              >
-                <Link as={`/posts/${post.slug}`} href="/posts/[slug]" passHref>
-                  Read More
-                </Link>
-              </Text>
-            </Flex>
-          </Box>
-        ))}
-      </VStack>
+      <Stack direction="row" h="100px" w="50%" p={4} mt="24" mb="24">
+        <Divider orientation="vertical" />
+        <Stack direction="column">
+          <Text fontSize="3xl">Hi There, Im Corlys 👋</Text>
+          <Text fontSize="medium">Blockchain & Frontend Developer</Text>
+        </Stack>
+      </Stack>
+      <ProjectSection projects={projects} />
+      <BlogPost posts={posts} />
     </Box>
   );
 };
 
 export const getStaticProps: GetStaticProps = async () => {
+  const projects = [
+    {
+      title: "scaffold-eth",
+      description:
+        "A simple decentralized app for staking your eth to a certain address after some threshold requirements",
+      imageUri: "scaffold-eth.png",
+      url: "https://scaffold-eth-staking-app.vercel.app",
+    },
+    {
+      title: "adhan-app",
+      description: "Simple app shooting api for prayer times",
+      imageUri: "adhan-app.png",
+      url: "https://adhan-nextjs-typescript.vercel.app/",
+    },
+  ];
   const posts = getAllPosts(["date", "description", "slug", "title"]);
   return {
-    props: { posts },
+    props: { posts, projects },
   };
 };
 

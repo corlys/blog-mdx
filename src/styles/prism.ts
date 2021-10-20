@@ -10,7 +10,7 @@ const prismBaseTheme = css`
     color: ${theme.colors.gray[800]};
     background: none;
     font-family: ${theme.fonts.mono};
-    font-size: ${theme.fontSizes.sm};
+    font-size: ${theme.fontSizes.md};
     text-align: left;
     word-spacing: normal;
     word-break: normal;

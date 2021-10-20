@@ -15,11 +15,13 @@ import rehypeSlug from "rehype-slug";
 
 import { PostType } from "../../types/post";
 import { postFilePaths, POSTS_PATH } from "../../utils/mdxUtils";
+import MDXComponents from "components/MDXComponents";
 
 const components = {
   Head,
   Image,
   Link,
+  ...MDXComponents,
 };
 
 type PostPageProps = {
@@ -33,14 +35,12 @@ const PostDetail = ({ source, frontMatter }: PostPageProps): JSX.Element => {
       <Text fontSize="3xl" align="center">
         {frontMatter.title}
       </Text>
-      <Text align="start" fontSize="medium">
+      <Text mb="4" align="start" fontSize="medium">
         {frontMatter.date
           ? format(parseISO(frontMatter.date), "MMMM dd, yyyy")
           : ""}
       </Text>
-      <Box>
-        <MDXRemote {...source} components={components} />
-      </Box>
+      <MDXRemote {...source} components={components} />
     </Box>
   );
 };
